@@ -1,0 +1,22 @@
+{
+	"name": "sesser/Scurl",
+	"description": "A small library wrapper for making HTTP requests using PHP curl functions",
+	"keywords": [ "library", "http", "curl" ],
+	"license": "MIT",
+	"homepage": "https://github.com/sesser/Scurl",
+	"authors": [
+		{
+			"name": "Randy Sesser",
+			"email": "sesser@gmail.com",
+			"homepage": "http://randys.org"
+		}
+	],
+	"require": {
+		"php": ">=5.4.0"
+	},
+	"autoload": {
+		"psr-0": {
+			"Scurl": "src/"
+		}
+	}
+}

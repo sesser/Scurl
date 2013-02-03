@@ -38,6 +38,12 @@ namespace Scurl;
  */
 class Response
 {
+	/** @var string The URL that made this request */
+	public $request_url = '';
+	
+	/** @var array The parameters passed in the request */
+	public $request_parameters = [];
+	
 	/** @var array The response headers */
 	public $headers = [];
 	
@@ -50,13 +56,45 @@ class Response
 	/** @var string The response body */
 	public $body = '';
 	
+	/** @var string The raw response headers and all */
+	public $raw = '';
+	
+	/** @var int The HTTP status code for this response */
+	public $code = 0;
+	
+	/** @var string The HTTP status message */
+	public $status = '';
+	
 	/**
 	 * Creates a new Response object based on the raw response from the HTTP request
 	 * 
 	 * @param string $raw_response The raw response from the HTTP request
 	 */
-	public function __construct($raw_response = '')
+	public function __construct($response)
 	{
+		$this->raw = $response;
+		$head = '';
+		$body = '';
+		
+		list($head, $body) = explode("\r\n\r\n", $response, 2);
+		
+		if (false !== ($pos = stripos($head, '100 continue'))) {
+			list($head, $body) = explode("\r\n\r\n", $body, 2);
+		}
+		
+		$this->body = $body;
+		
+		$headers = explode("\r\n", $head);
+		
+		foreach ($headers as $header) {
+			if (preg_match('/^(?<protocol>HTTPS?)\/(?<version>\d\.\d)\s(?<code>[\d]{3})\s(?<status>.+)/', $header, $m)) {
+				$this->code = $m['code'];
+				$this->status = $m['status'];
+				continue;
+			}
+			$parts = explode(':', $header);
+			$this->headers[$parts[0]] = trim($parts[1]);
+		}
 		
 	}
 }

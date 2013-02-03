@@ -29,9 +29,5 @@
 /**
  * @author Randy Sesser <sesser@gmail.com>
  */
-
-// TODO: check include path
-ini_set('include_path', ini_get('include_path').PATH_SEPARATOR.dirname(__FILE__).'/../../../../../../../../usr/local/lib/php');
-
-// put your code here
-?>
+include_once dirname(__DIR__) . '/vendor/autoload.php';
+define('TEST_PUTFILE', __DIR__ . '/mock/Scan-130106-0001.tif');

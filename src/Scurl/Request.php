@@ -55,9 +55,6 @@ class Request
 	/** Request method HEAD */
 	const METHOD_HEAD = 'HEAD';
 
-	/** Request method OPTIONS */
-	const METHOD_OPTIONS = 'OPTIONS';
-	
 	/** @var string The request method */
 	public $method = Request::METHOD_GET;
 	
@@ -66,6 +63,9 @@ class Request
 	
 	/** @var array The request parameters */
 	public $parameters = [];
+	
+	/** @var mixed Generally used for PUT requests
+	public $data = NULL;
 	
 	/** @var array The headers sent to the server */
 	public $headers = [];
@@ -97,7 +97,7 @@ class Request
 				'user' => '',
 				'pass' => ''
 			],
-			'file' => '',
+			'data' => '',
 			'parameters' => [],
 			'cookie' => [],
 			'headers' => [
@@ -116,6 +116,11 @@ class Request
 		]);
 	}
 	
+	/**
+	 * Sends the request to the server
+	 * @return \Scurl\Response
+	 * @throws Exceptions\RequestException
+	 */
 	public function send()
 	{
 		if (empty($this->url))
@@ -149,19 +154,20 @@ class Request
 			case Request::METHOD_HEAD:
 				$this->setCurlOption($ch, [
 					CURLOPT_NOBODY => TRUE,
-					CURLOPT_URL => $this->url
+					CURLOPT_URL => $this->url . $query
 				]);
 				break;
 			case Request::METHOD_PUT:
-				if (!isset($this->config['file']) || empty($this->config['file']))
-					throw new Exceptions\RequestException("No input file specified for PUT request");
-				if (is_file($this->config['file'])) {
-					if (FALSE !== ($fp = fopen($this->config['file'], 'r'))) {
+				$this->setCurlOption($ch, CURLOPT_URL, $this->url . $query);				
+				if (is_file($this->config['data'])) {
+					if (FALSE !== ($fp = fopen($this->config['data'], 'r'))) {
 						$this->setCurlOption($ch, CURLOPT_PUT, TRUE);
 						$this->setCurlOption($ch, CURLOPT_INFILE, $fp);
-						$this->setCurlOption($ch, CURLOPT_INFILESIZE, filesize($this->config['file']));
-						$this->setCurlOption($ch, CURLOPT_URL, $this->url . $query);
+						$this->setCurlOption($ch, CURLOPT_INFILESIZE, filesize($this->config['data']));
 					}
+				} else {
+					$this->setCurlOption($ch, CURLOPT_CUSTOMREQUEST, Request::METHOD_PUT);
+					$this->setCurlOption($ch, CURLOPT_POSTFIELDS, $this->config['data']);
 				}
 				break;
 			case Request::METHOD_DELETE:
@@ -186,7 +192,14 @@ class Request
 		return $response;
 	}
 	
-	private function setCurlOption($ch, $option, $value)
+	/**
+	 * Sets a curl option or options if second parameter is an array
+	 * @param resource $ch The cURL resource (from curl_init())
+	 * @param mixed $option A CURLOPT_* option or array of CURLOPT_* => value options
+	 * @param mixed $value The value to set.
+	 * @throws Exceptions\RequestException
+	 */
+	private function setCurlOption($ch, $option, $value = NULL)
 	{
 		if (!is_resource($ch))
 			throw new Exceptions\RequestException('Parameter #0 is not a valid curl resource');
@@ -202,11 +215,16 @@ class Request
 		}
 	}
 	
+	/**
+	 * Initializes the request
+	 * @param array $defaults
+	 */
 	private function initialize(array $defaults)
 	{
+		$this->config = Utils::array_merge_recursive($defaults, $this->config);
 		$this->method = isset($this->config['method']) ? $this->config['method'] : $defaults['method'];
 		$this->parameters = isset($this->config['parameters']) ? $this->config['parameters'] : [];
-		
+		$this->data = isset($this->config['data']) ? $this->config['data'] : NULL;
 		if (isset($this->config['auth']))
 			$this->auth = $this->config['auth'] + $defaults['auth'];
 		

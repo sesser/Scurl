@@ -38,13 +38,94 @@ namespace Scurl;
  */
 class Scurl
 {
-	public static function get($url, $params = '', array $config = [])
+	/** @var array Configuration */
+	protected $config = [];
+	
+	public function __construct(array $config = [])
 	{
+		$this->config = $config;
+	}
+	
+	/**
+	 * Convenience method for GET requests
+	 * @param string $url The URL to GET
+	 * @param mixed $params An array of key/value pairs or query string
+	 * @param array $config Extra config for this request (headers, cookies, etc)
+	 * @return Response
+	 */
+	public function get($url, $params = '', array $config = [])
+	{
+		return $this->request($url, $params, $config);
+	}
+	
+	/**
+	 * Convenience method for POST requests
+	 * @param string $url The URL in which to POST
+	 * @param mixed $params An array of key/value pairs or query string
+	 * @param array $config Extra config for this request (headers, cookies, etc)
+	 * @return Response
+	 */
+	public function post($url, $params = '', array $config = [])
+	{
+		return $this->request($url, $params, $config, Request::METHOD_POST);
+	}
+	
+	/**
+	 * Convenience method for PUT requests
+	 * @param string $url The URL in which to PUT a resource
+	 * @param mixed $params An array of key/value pairs or query string
+	 * @param array $config Extra config for this request (headers, cookies, etc)
+	 * @return Response
+	 */
+	public function put($url, $params = '', array $config = [])
+	{
+		return $this->request($url, $params, $config, Request::METHOD_PUT);
+	}
+	
+	/**
+	 * Convenience method for DELETE requests
+	 * @param string $url The URL to DELETE
+	 * @param mixed $params An array of key/value pairs or query string
+	 * @param array $config Extra config for this request (headers, cookies, etc)
+	 * @return Response
+	 */
+	public function delete($url, $params = '', array $config = [])
+	{
+		return $this->request($url, $params, $config, Request::METHOD_DELETE);
+	}
+	
+	/**
+	 * Convenience method for HEAD requests
+	 * @param string $url The URL
+	 * @param mixed $params An array of key/value pairs or query string
+	 * @param array $config Extra config for this request (headers, cookies, etc)
+	 * @return Response
+	 */
+	public function head($url, $params = '', array $config = [])
+	{
+		return $this->request($url, $params, $config, Request::METHOD_HEAD);
+	}
+	
+	/**
+	 * Creats and sends a new request
+	 * @param string $url The URL. Can contain authentication
+	 * @param mixed $params An associative array of key/value pairs or query string (foo=bar&baz=beer)
+	 * @param array $config Extra configuration for the request (cookies, headers, authentication)
+	 * @param string $method The request method (Request::METHOD_GET, Request::METHOD_POST, etc)
+	 * @return Response
+	 */
+	public function request($url, $params, array $config = [], $method = Request::METHOD_GET)
+	{
+		$config = Utils::array_merge_recursive($this->config, $config);
+		$config['method'] = $method;
 		$parameters = [];
-		if (!is_array($params))
-			parse_str ($params, $parameters);
+		if (!is_array($params)) {
+			parse_str($params, $parameters);
+		} else {
+			$parameters = $params;
+		}
 		$config['parameters'] = $parameters;
-		$parsed_url = [
+		$parsed_url = Utils::array_merge_recursive([
 			'scheme' => 'http',
 			'host' => '',
 			'port' => 80,
@@ -53,16 +134,17 @@ class Scurl
 			'path' => '',
 			'query' => '',
 			'fragment' => ''
-		] + parse_url($url);
+		], parse_url($url));
+		
 		extract($parsed_url);
 		
 		if (!empty($user)) 
 			$config['auth'] = [ 'user' => $user, 'pass' => $pass ];
 		
-		$url = http_build_url($url, $parsed_url, HTTP_URL_STRIP_AUTH);
+		$url = Utils::http_build_url($parsed_url);
 		
 		$request = new Request($url, $config);
-		return $request->send();
+		return $request->send();		
 	}
 }
 

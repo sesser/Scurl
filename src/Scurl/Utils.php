@@ -101,7 +101,7 @@ class Utils
 			$surl .= ':' . $port;
 		$surl .= $path;
 		$surl .= !empty($query) ? '?' . $query : '';
-		$surl .= $fragment;
+		$surl .= !empty($fragment) ? '#' . $fragment : '';
 		return $surl;
 	}
 

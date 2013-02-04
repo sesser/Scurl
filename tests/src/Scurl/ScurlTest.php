@@ -30,6 +30,15 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	{
 		
 	}
+	
+	/**
+	 * @covers Scurl\Request::__construct
+	 * @covers Scurl\Request::initialize
+	 */
+	public function testInstanceAndInit()
+	{
+		$this->assertInstanceOf('\Scurl\Scurl', $this->scurl);
+	}
 
 	/**
 	 * @covers Scurl\Scurl::get

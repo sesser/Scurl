@@ -1,5 +1,5 @@
 {
-	"name": "sesser/Scurl",
+	"name": "sesser/scurl",
 	"description": "A small library wrapper for making HTTP requests using PHP curl functions",
 	"keywords": [ "library", "http", "curl" ],
 	"license": "MIT",

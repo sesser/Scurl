@@ -5,7 +5,8 @@ includes a [composer](http://getcomposer.org) file for easy inclusion in your pr
 
 ## How To Include ##
 
-** With Composer **
+**With Composer**
+
 Add the following to your `composer.json` file in your project:
 
 ``` json
@@ -16,12 +17,13 @@ Add the following to your `composer.json` file in your project:
 }
 ```
 
-Then make sure you include your `autoload.php` file.
+Then make sure you include your `vendor/autoload.php` file.
 
-** Without Composer **
+**Without Composer**
 
 ``` php
-include_once 'src/Sesser/Scurl/Scurl.php';
+<?php
+	include_once 'src/Sesser/Scurl/Scurl.php';
 ```
 
 ## Quick How To ##
@@ -30,26 +32,29 @@ Scurl is pretty basic. It supports the major calls (GET, POST, PUT, DELETE, HEAD
 At it's most basic level, you can make a GET request like so
 
 ``` php
-$scurl = new Scurl\Scurl;
-$response = $scurl->get('http://www.google.com');
-echo $response->body;
+<?php
+	$scurl = new Scurl\Scurl;
+	$response = $scurl->get('http://www.google.com');
+	echo $response->body;
 ```
 
 For more complex calls like PUTting objects to servers:
 ``` php
-$scurl = new Scurl\Scurl;
-$response = $scurl->put('http://api.awesomeapi.net/v1/upload/file.png', [], [
-  'data' => '/full/path/to/file.png'
-]);
+<?php
+	$scurl = new Scurl\Scurl;
+	$response = $scurl->put('http://api.awesomeapi.net/v1/upload/file.png', [], [
+	  'data' => '/full/path/to/file.png'
+	]);
 ```
 
 PUTting `json` data (and presumably `xml` data, though untested) is possible too:
 ``` php
-$scurl = new Scurl\Scurl;
-$response = $scurl->put('http://api.awesomeapi.net/v1/update', [ 'param' => 'value'], [
-	'data' => '{"data": { "foo": "bar" }}',
-	'headers' => ['Content-type' => 'application/json']
-]);
+<?php
+	$scurl = new Scurl\Scurl;
+	$response = $scurl->put('http://api.awesomeapi.net/v1/update', [ 'param' => 'value'], [
+		'data' => '{"data": { "foo": "bar" }}',
+		'headers' => ['Content-type' => 'application/json']
+	]);
 ```
 
 ## The Long Story ##
@@ -61,6 +66,7 @@ override them in a specific call. The configuration passed to the `__construct`
 is merged with the defaults shown below:
 
 ``` php
+<?php
 $defaults = [
 	'method' => Request::METHOD_GET,
 	'auth' => [

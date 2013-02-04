@@ -29,12 +29,13 @@
  * @filesource
  */
 
-namespace Scurl;
+namespace Sesser\Scurl;
 
 /**
  * Request
  * 
- * The Scurl request object.
+ * The Scurl request object. Call Request::send() to send the request and return
+ * the {@link Response Response} object
  *
  * @author Randy Sesser <sesser@gmail.com>
  */
@@ -64,7 +65,7 @@ class Request
 	/** @var array The request parameters */
 	public $parameters = [];
 	
-	/** @var mixed Generally used for PUT requests
+	/** @var mixed Generally used for PUT requests */
 	public $data = NULL;
 	
 	/** @var array The headers sent to the server */
@@ -187,6 +188,8 @@ class Request
 		
 		$response = new Response($res);
 		$response->info = curl_getinfo($ch);
+		$response->request_url = $response->info['url'];
+		$response->request_parameters = $this->parameters;
 		curl_close($ch);
 		
 		return $response;
@@ -224,21 +227,12 @@ class Request
 		$this->config = Utils::array_merge_recursive($defaults, $this->config);
 		$this->method = isset($this->config['method']) ? $this->config['method'] : $defaults['method'];
 		$this->parameters = isset($this->config['parameters']) ? $this->config['parameters'] : [];
+		$this->options = isset($this->config['options']) ? $this->config['options'] : [];
+		$this->headers = isset($this->config['headers']) ? $this->config['headers'] : [];
 		$this->data = isset($this->config['data']) ? $this->config['data'] : NULL;
 		if (isset($this->config['auth']))
 			$this->auth = $this->config['auth'] + $defaults['auth'];
 		
-		if (isset($this->config['headers'])) {
-			$this->headers = $this->config['headers'] + $defaults['headers'];
-		} else {
-			$this->headers = $defaults['headers'];
-		}
-		
-		if (isset($this->config['options'])) {
-			$this->options = $this->config['options'] + $defaults['options'];
-		} else {
-			$this->options = $defaults['options'];
-		}
 		$headers = [];
 		foreach ($this->headers as $k => $v)
 			$headers[] = sprintf('%s: %s', $k, $v);
@@ -266,8 +260,6 @@ class Request
 				foreach ($this->config['cookie'] as $k => $v)
 					$ck[] = sprintf('%s=%s', $k, $v);
 				$cookie = implode('; ', $ck);
-			} else {
-				$cookie = $this->config['cookie'];
 			}
 		}
 		$this->curlopts[CURLOPT_COOKIE] = $cookie;

@@ -29,18 +29,22 @@
  * @filesource
  */
 
-namespace Scurl\Exceptions;
+namespace Sesser\Scurl\Exceptions;
 
 /**
- * ScurlRequestException
+ * RequestException
  *
  * @author Randy Sesser <sesser@gmail.com>
  */
 class RequestException extends \Exception
 {
-	public function __construct($message = null, $code = 0)
+	/**
+	 * Constructs a new RequestException
+	 * @inheritdoc
+	 */
+	public function __construct($message = null, $code = 0, $previous = NULL)
 	{
-		parent::__construct($message, $code, NULL);
+		parent::__construct($message, $code, $previous);
 	}
 }
 

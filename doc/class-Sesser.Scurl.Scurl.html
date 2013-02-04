@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.8.0" />
+
+	<title>Class Sesser\Scurl\Scurl | Scurl - A Simple Curl Wrapper for PHP</title>
+
+	<script type="text/javascript" src="resources/combined.js?2674013585"></script>
+	<script type="text/javascript" src="elementlist.js?2412868771"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+				<li class="active"><a href="namespace-Sesser.html">Sesser<span></span></a>
+						<ul>
+				<li class="active"><a href="namespace-Sesser.Scurl.html">Scurl<span></span></a>
+						<ul>
+				<li><a href="namespace-Sesser.Scurl.Exceptions.html">Exceptions</a>
+						</li>
+							</ul></li></ul></li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-Sesser.Scurl.Request.html">Request</a></li>
+				<li><a href="class-Sesser.Scurl.Response.html">Response</a></li>
+				<li class="active"><a href="class-Sesser.Scurl.Scurl.html">Scurl</a></li>
+				<li><a href="class-Sesser.Scurl.Utils.html">Utils</a></li>
+			</ul>
+
+
+
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-Sesser.Scurl.html" title="Summary of Sesser\Scurl"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="scurl-a-simple-curl-wrapper-for-php-api-documentation.zip" title="Download documentation as ZIP archive"><span>Download</span></a>
+			</li>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Scurl</h1>
+
+
+	<div class="description">
+	
+<p>Scurl</p>
+
+<p>A Simple curl wrapper for making HTTP requests. Supported methods are GET,
+POST PUT, DELETE and HEAD. With some modifications, it could easily send other
+custom requests (i.e. OPTIONS). Example:</p>
+
+<pre>
+<span class="php-var">$scurl</span> = <span
+class="php-keyword1">new</span> Scurl\Scurl(
+        [<span
+class="php-quote">'options'</span> =&gt; [ <span
+class="php-quote">'user-agent'</span> =&gt; <span
+class="php-quote">'Scurl/1.0; PHP+cURL'</span> ],
+        [<span
+class="php-quote">'headers'</span> =&gt; [ <span
+class="php-quote">'X-Powered-By'</span> =&gt; <span
+class="php-quote">'My awesome app v0.1a Super Alpha Build'</span> ]
+]);
+<span
+class="php-var">$response</span> = <span
+class="php-var">$scurl</span>-&gt;get(<span
+class="php-quote">'http://api.someawesomeservice.com/v1/endpoint'</span>, <span
+class="php-quote">'param1=value1&amp;foo=bar'</span>);
+<span
+class="php-comment">// or the parameters can be an associative array of param =&gt; value pairs</span>
+<span
+class="php-var">$response</span> = <span
+class="php-var">$scurl</span>-&gt;get(<span
+class="php-quote">'http://api.someawesomeservice.com/v1/endpoint'</span>, [<span
+class="php-quote">'param1'</span> =&gt; <span
+class="php-quote">'value1'</span>, <span
+class="php-quote">'foo'</span> =&gt; <span
+class="php-quote">'bar'</span>]);
+<span
+class="php-comment">// or you can pass options to</span>
+<span
+class="php-var">$response</span> = <span
+class="php-var">$scurl</span>-&gt;get(<span
+class="php-quote">'http://api.someawesomeservice.com/v1/endpoint?param1=value1&amp;foo=bar'</span>, <span
+class="php-quote">''</span>, [
+        <span
+class="php-quote">'options'</span> =&gt; [<span
+class="php-quote">'user-agent'</span> =&gt; <span
+class="php-quote">'Private UA'</span>]
+]);
+<span
+class="php-var">$data</span> = <span
+class="php-keyword2">json_decode</span>(<span
+class="php-var">$response</span>-&gt;body, <span
+class="php-keyword1">TRUE</span>);
+
+</pre>
+
+<p>Supported calls: get, post, put, delete, head</p>
+
+	</div>
+
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-Sesser.html">Sesser</a>\<a href="namespace-Sesser.Scurl.html">Scurl</a><br />
+		
+
+				<b>Author:</b>
+				Randy Sesser &lt;<a
+href="mailto:sesser&#64;gmail.com">sesser&#64;<!---->gmail.com</a>&gt;<br />
+				<b>See:</b>
+				<code><code><a href="class-Sesser.Scurl.Scurl.html#_get">Sesser\Scurl\Scurl::get()</a></code></code><br />
+				<b>See:</b>
+				<code><code><a href="class-Sesser.Scurl.Scurl.html#_post">Sesser\Scurl\Scurl::post()</a></code></code><br />
+				<b>See:</b>
+				<code><code><a href="class-Sesser.Scurl.Scurl.html#_put">Sesser\Scurl\Scurl::put()</a></code></code><br />
+				<b>See:</b>
+				<code><code><a href="class-Sesser.Scurl.Scurl.html#_delete">Sesser\Scurl\Scurl::delete()</a></code></code><br />
+				<b>See:</b>
+				<code><code><a href="class-Sesser.Scurl.Scurl.html#_head">Sesser\Scurl\Scurl::head()</a></code></code><br />
+		<b>Located at</b> <a href="source-class-Sesser.Scurl.Scurl.html#34-177" title="Go to source code">Sesser/Scurl/Scurl.php</a><br />
+	</div>
+
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-Sesser.Scurl.Scurl.html#72-75" title="Go to source code">__construct</a>( <span>array <var>$config</var> = []</span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="get" id="_get">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_get">#</a>
+		<code><a href="source-class-Sesser.Scurl.Scurl.html#77-87" title="Go to source code">get</a>( <span>string <var>$url</var></span>, <span>mixed <var>$params</var> = <span class="php-quote">''</span></span>, <span>array <var>$config</var> = []</span> )</code>
+
+		<div class="description short">
+			
+<p>Convenience method for GET requests</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Convenience method for GET requests</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url The URL to GET</dd>
+					<dt><var>$params</var></dt>
+					<dd><code>mixed</code><br>$params An array of key/value pairs or query string</dd>
+					<dt><var>$config</var></dt>
+					<dd><code>array</code><br>$config Extra config for this request (headers, cookies, etc)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="post" id="_post">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_post">#</a>
+		<code><a href="source-class-Sesser.Scurl.Scurl.html#89-99" title="Go to source code">post</a>( <span>string <var>$url</var></span>, <span>mixed <var>$params</var> = <span class="php-quote">''</span></span>, <span>array <var>$config</var> = []</span> )</code>
+
+		<div class="description short">
+			
+<p>Convenience method for POST requests</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Convenience method for POST requests</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url The URL in which to POST</dd>
+					<dt><var>$params</var></dt>
+					<dd><code>mixed</code><br>$params An array of key/value pairs or query string</dd>
+					<dt><var>$config</var></dt>
+					<dd><code>array</code><br>$config Extra config for this request (headers, cookies, etc)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="put" id="_put">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_put">#</a>
+		<code><a href="source-class-Sesser.Scurl.Scurl.html#101-111" title="Go to source code">put</a>( <span>string <var>$url</var></span>, <span>mixed <var>$params</var> = <span class="php-quote">''</span></span>, <span>array <var>$config</var> = []</span> )</code>
+
+		<div class="description short">
+			
+<p>Convenience method for PUT requests</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Convenience method for PUT requests</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url The URL in which to PUT a resource</dd>
+					<dt><var>$params</var></dt>
+					<dd><code>mixed</code><br>$params An array of key/value pairs or query string</dd>
+					<dt><var>$config</var></dt>
+					<dd><code>array</code><br>$config Extra config for this request (headers, cookies, etc)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="delete" id="_delete">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_delete">#</a>
+		<code><a href="source-class-Sesser.Scurl.Scurl.html#113-123" title="Go to source code">delete</a>( <span>string <var>$url</var></span>, <span>mixed <var>$params</var> = <span class="php-quote">''</span></span>, <span>array <var>$config</var> = []</span> )</code>
+
+		<div class="description short">
+			
+<p>Convenience method for DELETE requests</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Convenience method for DELETE requests</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url The URL to DELETE</dd>
+					<dt><var>$params</var></dt>
+					<dd><code>mixed</code><br>$params An array of key/value pairs or query string</dd>
+					<dt><var>$config</var></dt>
+					<dd><code>array</code><br>$config Extra config for this request (headers, cookies, etc)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="head" id="_head">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_head">#</a>
+		<code><a href="source-class-Sesser.Scurl.Scurl.html#125-135" title="Go to source code">head</a>( <span>string <var>$url</var></span>, <span>mixed <var>$params</var> = <span class="php-quote">''</span></span>, <span>array <var>$config</var> = []</span> )</code>
+
+		<div class="description short">
+			
+<p>Convenience method for HEAD requests</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Convenience method for HEAD requests</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url The URL</dd>
+					<dt><var>$params</var></dt>
+					<dd><code>mixed</code><br>$params An array of key/value pairs or query string</dd>
+					<dt><var>$config</var></dt>
+					<dd><code>array</code><br>$config Extra config for this request (headers, cookies, etc)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="request" id="_request">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_request">#</a>
+		<code><a href="source-class-Sesser.Scurl.Scurl.html#137-176" title="Go to source code">request</a>( <span>string <var>$url</var></span>, <span>mixed <var>$params</var></span>, <span>array <var>$config</var> = []</span>, <span>string <var>$method</var> = <code><a href="class-Sesser.Scurl.Request.html#METHOD_GET">Sesser\Scurl\Request::<b>METHOD_GET</b></a></code></span> )</code>
+
+		<div class="description short">
+			
+<p>Creats and sends a new request</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Creats and sends a new request</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$url</var></dt>
+					<dd><code>string</code><br>$url The URL. Can contain authentication</dd>
+					<dt><var>$params</var></dt>
+					<dd><code>mixed</code><br>$params An associative array of key/value pairs or query string
+(foo=bar&amp;baz=beer)</dd>
+					<dt><var>$config</var></dt>
+					<dd><code>array</code><br>$config Extra configuration for the request (cookies, headers, authentication)</dd>
+					<dt><var>$method</var></dt>
+					<dd><code>string</code><br>$method The request method (Request::METHOD_GET, Request::METHOD_POST, etc)</dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-Sesser.Scurl.Response.html">Sesser\Scurl\Response</a></code></code><br />
+				</div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="config" id="$config">
+		<td class="attributes"><code>
+			protected  
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-Sesser.Scurl.Scurl.html#69-70" title="Go to source code"><var>$config</var></a>
+		</td>
+		<td class="value"><code>[]</code></td>
+		<td class="description"><div>
+			<a href="#$config" class="anchor">#</a>
+
+			<div class="description short">
+				
+<p>Configuration</p>
+
+			</div>
+
+			<div class="description detailed hidden">
+				
+<p>Configuration</p>
+
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+</div>
+
+	<div id="footer">
+		Scurl - A Simple Curl Wrapper for PHP API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

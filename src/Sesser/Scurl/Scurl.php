@@ -29,10 +29,43 @@
  * @filesource
  */
 
-namespace Scurl;
+namespace Sesser\Scurl;
+
+require_once 'Utils.php';
+require_once 'Exceptions/RequestException.php';
+require_once 'Request.php';
+require_once 'Response.php';
 
 /**
  * Scurl
+ * 
+ * A Simple curl wrapper for making HTTP requests. Supported methods are GET, POST
+ * PUT, DELETE and HEAD. With some modifications, it could easily send other
+ * custom requests (i.e. OPTIONS). Example:
+ * 
+ * <code>
+ *	$scurl = new Scurl\Scurl(
+ *		['options' => [ 'user-agent' => 'Scurl/1.0; PHP+cURL' ],
+ *		['headers' => [ 'X-Powered-By' => 'My awesome app v0.1a Super Alpha Build' ]
+ *	]);
+ *	$response = $scurl->get('http://api.someawesomeservice.com/v1/endpoint', 'param1=value1&foo=bar');
+ *	// or the parameters can be an associative array of param => value pairs
+ *	$response = $scurl->get('http://api.someawesomeservice.com/v1/endpoint', ['param1' => 'value1', 'foo' => 'bar']);
+ *	// or you can pass options to 
+ *	$response = $scurl->get('http://api.someawesomeservice.com/v1/endpoint?param1=value1&foo=bar', '', [
+ *		'options' => ['user-agent' => 'Private UA']
+ *	]);
+ *	$data = json_decode($response->body, TRUE);
+
+ * </code>
+ * 
+ * Supported calls: get, post, put, delete, head
+ * 
+ * @see Scurl::get
+ * @see Scurl::post
+ * @see Scurl::put
+ * @see Scurl::delete
+ * @see Scurl::head
  *
  * @author Randy Sesser <sesser@gmail.com>
  */

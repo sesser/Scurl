@@ -29,7 +29,7 @@
  * @filesource
  */
 
-namespace Scurl;
+namespace Sesser\Scurl;
 
 /**
  * Response

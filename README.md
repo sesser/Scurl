@@ -33,7 +33,7 @@ At it's most basic level, you can make a GET request like so
 
 ``` php
 <?php
-	$scurl = new Scurl\Scurl;
+	$scurl = new Sesser\Scurl\Scurl;
 	$response = $scurl->get('http://www.google.com');
 	echo $response->body;
 ```
@@ -41,7 +41,7 @@ At it's most basic level, you can make a GET request like so
 For more complex calls like PUTting objects to servers:
 ``` php
 <?php
-	$scurl = new Scurl\Scurl;
+	$scurl = new Sesser\Scurl\Scurl;
 	$response = $scurl->put('http://api.awesomeapi.net/v1/upload/file.png', [], [
 	  'data' => '/full/path/to/file.png'
 	]);
@@ -50,7 +50,7 @@ For more complex calls like PUTting objects to servers:
 PUTting `json` data (and presumably `xml` data, though untested) is possible too:
 ``` php
 <?php
-	$scurl = new Scurl\Scurl;
+	$scurl = new Sesser\Scurl\Scurl;
 	$response = $scurl->put('http://api.awesomeapi.net/v1/update', [ 'param' => 'value'], [
 		'data' => '{"data": { "foo": "bar" }}',
 		'headers' => ['Content-type' => 'application/json']

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The MIT License (MIT)
  * Copyright (c) 2013 Randy Sesser <sesser@gmail.com>
@@ -30,7 +29,7 @@
  */
 
 namespace Sesser\Scurl;
-
+define('SCURL_VERSION', '1.01');
 require_once 'Utils.php';
 require_once 'Exceptions/RequestException.php';
 require_once 'Request.php';

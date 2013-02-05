@@ -33,8 +33,8 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @covers Scurl\Request::__construct
-	 * @covers Scurl\Request::initialize
+	 * @covers Sesser\Scurl\Request::__construct
+	 * @covers Sesser\Scurl\Request::initialize
 	 */
 	public function testInstanceAndInit()
 	{
@@ -42,10 +42,10 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Scurl\Scurl::get
-	 * @covers Scurl\Scurl::request
-	 * @covers Scurl\Request::send
-	 * @covers Scurl\Response::__construct
+	 * @covers Sesser\Scurl\Scurl::get
+	 * @covers Sesser\Scurl\Scurl::request
+	 * @covers Sesser\Scurl\Request::send
+	 * @covers Sesser\Scurl\Response::__construct
 	 */
 	public function testGet()
 	{
@@ -65,10 +65,10 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Scurl\Scurl::post
-	 * @covers Scurl\Scurl::request
-	 * @covers Scurl\Request::send
-	 * @covers Scurl\Response::__construct
+	 * @covers Sesser\Scurl\Scurl::post
+	 * @covers Sesser\Scurl\Scurl::request
+	 * @covers Sesser\Scurl\Request::send
+	 * @covers Sesser\Scurl\Response::__construct
 	 */
 	public function testPost()
 	{
@@ -88,10 +88,10 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Scurl\Scurl::put
-	 * @covers Scurl\Scurl::request
-	 * @covers Scurl\Request::send
-	 * @covers Scurl\Response::__construct
+	 * @covers Sesser\Scurl\Scurl::put
+	 * @covers Sesser\Scurl\Scurl::request
+	 * @covers Sesser\Scurl\Request::send
+	 * @covers Sesser\Scurl\Response::__construct
 	 */
 	public function testPut()
 	{
@@ -107,10 +107,10 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Scurl\Scurl::delete
-	 * @covers Scurl\Scurl::request
-	 * @covers Scurl\Request::send
-	 * @covers Scurl\Response::__construct
+	 * @covers Sesser\Scurl\Scurl::delete
+	 * @covers Sesser\Scurl\Scurl::request
+	 * @covers Sesser\Scurl\Request::send
+	 * @covers Sesser\Scurl\Response::__construct
 	 */
 	public function testDelete()
 	{
@@ -124,10 +124,10 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Scurl\Scurl::head
-	 * @covers Scurl\Scurl::request
-	 * @covers Scurl\Request::send
-	 * @covers Scurl\Response::__construct
+	 * @covers Sesser\Scurl\Scurl::head
+	 * @covers Sesser\Scurl\Scurl::request
+	 * @covers Sesser\Scurl\Request::send
+	 * @covers Sesser\Scurl\Response::__construct
 	 */
 	public function testHead()
 	{
@@ -140,9 +140,9 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Scurl\Scurl::request
-	 * @covers Scurl\Request::setCurlOption
-	 * @covers Scurl\Response::__construct
+	 * @covers Sesser\Scurl\Scurl::request
+	 * @covers Sesser\Scurl\Request::setCurlOption
+	 * @covers Sesser\Scurl\Response::__construct
 	 */
 	public function testRequest()
 	{

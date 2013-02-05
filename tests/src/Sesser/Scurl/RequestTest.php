@@ -35,7 +35,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @covers Scurl\Request::initialize
+	 * @covers Sesser\Scurl\Request::initialize
 	 */
 	public function testInitialize()
 	{
@@ -52,7 +52,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
-	 * @covers Scurl\Request::__construct
+	 * @covers Sesser\Scurl\Request::__construct
 	 */
 	public function testInstance()
 	{

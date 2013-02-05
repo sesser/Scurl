@@ -33,7 +33,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Scurl\Utils::array_merge_recursive
+	 * @covers Sesser\Scurl\Utils::array_merge_recursive
 	 */
 	public function testArray_merge_recursive()
 	{
@@ -57,7 +57,7 @@ class UtilsTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers Scurl\Utils::http_build_url
+	 * @covers Sesser\Scurl\Utils::http_build_url
 	 */
 	public function testHttp_build_url()
 	{

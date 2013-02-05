@@ -29,7 +29,6 @@
  */
 
 namespace Sesser\Scurl;
-define('SCURL_VERSION', '1.0.1');
 require_once 'Utils.php';
 require_once 'Exceptions/RequestException.php';
 require_once 'Request.php';

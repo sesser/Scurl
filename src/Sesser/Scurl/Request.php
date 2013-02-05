@@ -108,7 +108,7 @@ class Request
 				'Accept-Language' => 'en-us,en;q=0.5'			
 			],
 			'options' => [
-				'user-agent' => 'Scurl/' . SCURL_VERSION . '; PHP/' . PHP_VERSION . ' (+http://github.com/sesser/scurl)',
+				'user-agent' => 'Scurl/1.0.2'; PHP/' . PHP_VERSION . ' (+http://github.com/sesser/scurl)',
 				'timeout' => 10,
 				'connect_timeout' => 2,
 				'follow_location' => TRUE,

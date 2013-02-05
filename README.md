@@ -1,4 +1,7 @@
 ## Scurl ##
+
+[![Build Status](https://travis-ci.org/sesser/Scurl.png)](https://travis-ci.org/sesser/Scurl)
+
 Scurl is an easy to use PHP library for making HTTP requests. It requires 
 PHP >= 5.4 and the curl extension. The library is [PSR-0](https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-0.md) compliant and 
 includes a [composer](http://getcomposer.org) file for easy inclusion in your project.

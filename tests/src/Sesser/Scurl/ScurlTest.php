@@ -42,6 +42,26 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * @covers Sesser\Scurl\Scurl::addListener
+	 */
+	public function testEvents()
+	{
+		$eventAdded = FALSE;
+		$event1 = FALSE;
+		$event2 = FALSE;
+		$this->scurl->addListener(Scurl::EVENT_BEFORE, function(Sesser\Scurl\Request $request) {
+			$eventAdded = $event1 = TRUE;
+		});
+		$this->scurl->addListener(Scurl::EVENT_AFTER, function(Sesser\Scurl\Request $request, Sesser\Scurl\Response $response) {
+			$eventAdded = $event2 = TRUE;
+		});
+		$response = $this->scurl->get('http://httptest.instaphp.com/test/get?_method=' . __FUNCTION__ . '&test=get');
+		$this->assertTrue($eventAdded);
+		$this->assertTrue($event1);
+		$this->asserTrue($event2);
+	}
+
+	/**
 	 * @covers Sesser\Scurl\Scurl::get
 	 * @covers Sesser\Scurl\Scurl::request
 	 * @covers Sesser\Scurl\Request::send

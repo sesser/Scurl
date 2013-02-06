@@ -54,7 +54,7 @@ require_once 'Response.php';
  *		'options' => ['user-agent' => 'Private UA']
  *	]);
  *	$data = json_decode($response->body, TRUE);
-
+ *
  * </code>
  * 
  * Supported calls: get, post, put, delete, head
@@ -69,12 +69,45 @@ require_once 'Response.php';
  */
 class Scurl
 {
+
+	/** Before send event */
+	const EVENT_BEFORE = 'beforeSend';
+
+	/** After send event */
+	const EVENT_AFTER = 'afterSend';
+
+	/** Error event */
+	const EVENT_ERROR = 'error';
+
 	/** @var array Configuration */
 	protected $config = [];
+
+	/** @var array Events */
+	private static $events = [
+		'beforeSend' => [],
+		'afterSend' => [],
+		'error' => []
+	];
 	
 	public function __construct(array $config = [])
 	{
 		$this->config = $config;
+	}
+
+	public function addListener($event, $callback)
+	{
+		if (!array_key_exists($event, static::$events) || !!is_callable($callback))
+			return false;
+
+		$hash = '';
+		if ($callback instanceof \Closure) {
+			$hash = sha1(sprintf('%s_%s', $event, count(static::$events[$event]) + 1));
+		} else {
+			$hash = sha1(serialize($callback));
+		}
+		if (array_key_exists($event, static::$events)) {
+			static::$events[$event][$hash] = $callback;
+		}
 	}
 	
 	/**
@@ -175,7 +208,16 @@ class Scurl
 		$url = Utils::http_build_url($parsed_url);
 		
 		$request = new Request($url, $config);
-		return $request->send();		
+
+		foreach (static::$events[Scurl::EVENT_BEFORE] as $hash => $callable)
+			call_user_func_array($callable, [$request]);
+		
+		$response =  $request->send();
+
+		foreach (static::$events[Scurl::EVENT_AFTER] as $hash => $callable) 
+			call_user_func_array($callable, [$request, $response]);
+
+		return $response;
 	}
 }
 

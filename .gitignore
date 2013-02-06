@@ -1,3 +1,5 @@
 nbproject/private
+doc/**.*
+!doc/README.md
 vendor
 test.php

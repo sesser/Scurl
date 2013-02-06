@@ -82,21 +82,46 @@ class Scurl
 	/** @var array Configuration */
 	protected $config = [];
 
+	/** @var Scurl The instance of this Scurl */
+	private static $instance = NULL;
+
 	/** @var array Events */
 	private static $events = [
-		'beforeSend' => [],
-		'afterSend' => [],
-		'error' => []
+		Scurl::EVENT_BEFORE => [],
+		Scurl::EVENT_AFTER => [],
+		Scurl::EVENT_ERROR => []
 	];
 	
+	/**
+	 * Constructs a Scurl object and set the static $instance
+	 * @param array $config Configuration for this Scurl object
+	 */
 	public function __construct(array $config = [])
 	{
 		$this->config = $config;
+		static::$instance =& $this;
 	}
 
+	/**
+	 * Get the current instance of a Scurl object
+	 * @return Scurl
+	 */
+	public static function getInstance()
+	{
+		if (static::$instance === NULL)
+			return new self;
+		return static::$instance;
+	}
+
+	/**
+	 * Add a listener to call for an event
+	 * @param string $event The event
+	 * @param callable $callback A callback. Must be callable (is_callable)
+	 * @return mixed Returns the hash pointer for the event callback or false if the event doesn't exist or callback is not callable
+	 */
 	public function addListener($event, $callback)
 	{
-		if (!array_key_exists($event, static::$events) || !!is_callable($callback))
+		if (!array_key_exists($event, static::$events) || !is_callable($callback))
 			return false;
 
 		$hash = '';
@@ -105,9 +130,23 @@ class Scurl
 		} else {
 			$hash = sha1(serialize($callback));
 		}
-		if (array_key_exists($event, static::$events)) {
-			static::$events[$event][$hash] = $callback;
+		static::$events[$event][$hash] = $callback;
+		return $hash;
+	}
+
+	/**
+	 * Remove a listener from an event
+	 * @param string $event The event
+	 * @param string $hash The hash that points to the event callback
+	 * @return boolean
+	 */
+	public function removeListener($event, $hash)
+	{
+		if (isset(static::$events[$event][$hash])) {
+			unset(static::$events[$event][$hash]);
+			return true;
 		}
+		return false;
 	}
 	
 	/**
@@ -210,12 +249,12 @@ class Scurl
 		$request = new Request($url, $config);
 
 		foreach (static::$events[Scurl::EVENT_BEFORE] as $hash => $callable)
-			call_user_func_array($callable, [$request]);
+			call_user_func_array($callable, [&$request]);
 		
 		$response =  $request->send();
 
 		foreach (static::$events[Scurl::EVENT_AFTER] as $hash => $callable) 
-			call_user_func_array($callable, [$request, $response]);
+			call_user_func_array($callable, [&$request, &$response]);
 
 		return $response;
 	}

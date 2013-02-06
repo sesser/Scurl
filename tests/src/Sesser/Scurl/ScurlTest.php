@@ -35,30 +35,41 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @covers Sesser\Scurl\Request::__construct
 	 * @covers Sesser\Scurl\Request::initialize
+	 * @covers Sesser\Scurl\Scurl::getInstance
 	 */
 	public function testInstanceAndInit()
 	{
 		$this->assertInstanceOf('\Sesser\Scurl\Scurl', $this->scurl);
+		$scurl = Scurl::getInstance();
+		$this->assertInstanceOf('\Sesser\Scurl\Scurl', $scurl);
 	}
 
 	/**
 	 * @covers Sesser\Scurl\Scurl::addListener
+	 * @covers Sesser\Scurl\Scurl::removeListener
 	 */
 	public function testEvents()
 	{
-		$eventAdded = FALSE;
-		$event1 = FALSE;
-		$event2 = FALSE;
-		$this->scurl->addListener(Scurl::EVENT_BEFORE, function(Sesser\Scurl\Request $request) {
-			$eventAdded = $event1 = TRUE;
+		$self =& $this;
+		$scurl = Scurl::getInstance();
+		$before_hash = $scurl->addListener(Scurl::EVENT_BEFORE, function(Request $request) use($self) {
+			$self->assertTrue(TRUE);
 		});
-		$this->scurl->addListener(Scurl::EVENT_AFTER, function(Sesser\Scurl\Request $request, Sesser\Scurl\Response $response) {
-			$eventAdded = $event2 = TRUE;
+		$this->assertNotEmpty($before_hash);
+		$beforeHash = $scurl->addListener(Scurl::EVENT_BEFORE, [$this, 'eventCallbackTest']);
+		$this->assertEquals(sha1(serialize([$this, 'eventCallbackTest'])), $beforeHash);
+		$scurl->addListener(Scurl::EVENT_AFTER, function(Request $request, Response $response) use($self) {
+			$self->assertTrue(TRUE);
 		});
 		$response = $this->scurl->get('http://httptest.instaphp.com/test/get?_method=' . __FUNCTION__ . '&test=get');
-		$this->assertTrue($eventAdded);
-		$this->assertTrue($event1);
-		$this->asserTrue($event2);
+		$this->assertTrue($scurl->removeListener(Scurl::EVENT_BEFORE, $beforeHash));
+		$this->assertFalse($scurl->removeListener(Scurl::EVENT_BEFORE, 'nonexistanthash'));
+	}
+
+	public function eventCallbackTest(Request $request)
+	{
+		$this->assertTrue(TRUE);
+		$this->assertNotEmpty($request->url);
 	}
 
 	/**

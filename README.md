@@ -27,9 +27,10 @@ Then make sure you include your `vendor/autoload.php` file.
 ``` php
 <?php
 	include_once 'src/Sesser/Scurl/Scurl.php';
+?>
 ```
 
-## Quick How To ##
+##Quick How To##
 
 Scurl is pretty basic. It supports the major calls (GET, POST, PUT, DELETE, HEAD).
 At it's most basic level, you can make a GET request like so
@@ -39,6 +40,7 @@ At it's most basic level, you can make a GET request like so
 	$scurl = new Sesser\Scurl\Scurl;
 	$response = $scurl->get('http://www.google.com');
 	echo $response->body;
+?>
 ```
 
 For more complex calls like PUTting objects to servers:
@@ -48,6 +50,7 @@ For more complex calls like PUTting objects to servers:
 	$response = $scurl->put('http://api.awesomeapi.net/v1/upload/file.png', [], [
 	  'data' => '/full/path/to/file.png'
 	]);
+?>
 ```
 
 PUTting `json` data (and presumably `xml` data, though untested) is possible too:
@@ -58,9 +61,51 @@ PUTting `json` data (and presumably `xml` data, though untested) is possible too
 		'data' => '{"data": { "foo": "bar" }}',
 		'headers' => ['Content-type' => 'application/json']
 	]);
+?>
 ```
 
-## The Long Story ##
+##Events##
+
+Scurl supports basic events too so you can make modifications to the `Request` object before it
+sends the request off. Or, you can modify/read the `Response` after the request has been sent. This
+could be useful for logging requests or keeping track of the time it takes to get a response from a
+server.
+
+Currently, there's only two events called; `Scurl::EVENT_BEFORE` and `Scurl::EVENT_AFTER`. They are
+called before the request is sent and after the response is received, respectively. The events are a
+in a stack and called from top to bottom (first in, first called) so you can assign more than one callback
+to an event. See the example below:
+
+```php
+<?php
+	$scurl = Sesser\Scurl\Scurl::getInstance();
+	$after_hash = $scurl->addListener(Sesser\Scurl\Scurl::EVENT_AFTER, function(Sesser\Scurl\Request $request, Sesser\Scurl\Response $response) {
+		//-- Do some magic here... inspect the request headers, log the url and time it took, etc
+	});
+?>
+```
+
+The `Scurl::addListener` method returns the pointer for this event callback. If, for some reason, you
+want to remove the listener from the call stack, just call the `Scurl::removeListener` method.
+
+```php
+<?php
+	$scurl = Sesser\Scurl\Scurl::getInstance();
+	$scurl->removeListener(Sesser\Scurl\Scurl::EVENT_AFTER, $after_hash);
+?>
+```
+
+Please note that if the event passed to `addListener` is not a valid event or the callback is not
+callable, `addListener` will return `false` indicating that failed to register the event. Also, there
+is one other event that hasn't been implemented yet; `Sesser\Scurl\Scurl::EVENT_ERROR`. This event will
+be available soon and called when there is an error at the `curl` level. the method signature should look
+like this:
+
+```php
+<?php function($errNo, $errMessage, Sesser\Scurl\Request $request); ?>
+```
+
+##The Long Story##
 
 `Scurl` is just a wrapper to the `Request` class which does most of the heavy lifting.
 When you instantiate a `Scurl` object, you can pass an array of configuration
@@ -93,6 +138,7 @@ $defaults = [
 		'max_redirects' => 3
 	],
 ];
+?>
 ```
 
 ### Configuration Explained ###

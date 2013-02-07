@@ -126,7 +126,7 @@ class Scurl
 
 		$hash = '';
 		if ($callback instanceof \Closure) {
-			$hash = sha1(sprintf('%s_%s', $event, count(static::$events[$event]) + 1));
+			$hash = sha1(sprintf('%s_%s', $event, count(static::$events[$event])));
 		} else {
 			$hash = sha1(serialize($callback));
 		}
@@ -147,6 +147,46 @@ class Scurl
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 * Clears all callbacks for a given event or all events if not specified
+	 * @param string $event Clear only this event
+	 */
+	public function removeListeners($event = NULL)
+	{
+		if (!empty($event) && array_key_exists($event, static::$events)) {
+			static::$events[$event] = [];
+		} else {
+			foreach (static::$events as $evt => $events)
+				static::$events[$evt] = [];
+		}
+	}
+	
+	/**
+	 * Get callbacks for event or all callbacks for all events
+	 * @param string $event The event to retrieve
+	 * @return array
+	 */
+	public function getListeners($event = NULL)
+	{
+		if (!empty($event) && array_key_exists($event, static::$events))
+			return static::$events[$event];
+		return static::$events;
+	}
+	
+	/**
+	 * Get a specific callback for an event by its key
+	 * @param string $event The event
+	 * @param string $key The hash to which the callback is associated
+	 * @return mixed
+	 */
+	public function getListener($event, $key)
+	{
+		if (isset(static::$events[$event]) && isset(static::$events[$event][$key]))
+			return static::$events[$event][$key];
+		
+		return NULL;
 	}
 	
 	/**
@@ -251,12 +291,34 @@ class Scurl
 		foreach (static::$events[Scurl::EVENT_BEFORE] as $hash => $callable)
 			call_user_func_array($callable, [&$request]);
 		
-		$response =  $request->send();
-
+		try {
+			$response =  $request->send();
+			
+		} catch (Exceptions\RequestException $re) {
+			$response = new Response('');
+			$response->code = $re->getCode();
+			$response->status = $re->getMessage();
+			$response->request_parameters = $config['parameters'];
+			$response->request_url = $url;
+			foreach (static::$events[Scurl::EVENT_ERROR] as $hash => $callback)
+				call_user_func_array($callback, [$re->getCode(), $re->getMessage(), $request]);
+		}
+		
 		foreach (static::$events[Scurl::EVENT_AFTER] as $hash => $callable) 
 			call_user_func_array($callable, [&$request, &$response]);
-
+		
 		return $response;
+	}
+	
+	/**
+	 * Clean up the static variables to prevent pollution
+	 */
+	public function __destruct()
+	{
+		if (static::$instance != NULL)
+			static::$instance = NULL;
+		foreach (static::$events as $event => $events)
+			static::$events[$event] = [];
 	}
 }
 

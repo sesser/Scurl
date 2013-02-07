@@ -72,6 +72,9 @@ class Response
 	 */
 	public function __construct($response)
 	{
+		if (empty($response))
+			return;
+		
 		$this->raw = $response;
 		$head = '';
 		$body = '';

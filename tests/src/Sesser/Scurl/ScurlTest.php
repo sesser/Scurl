@@ -29,12 +29,13 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 	 */
 	protected function tearDown()
 	{
-		
+		$this->scurl = NULL;
 	}
 	
 	/**
 	 * @covers Sesser\Scurl\Request::__construct
 	 * @covers Sesser\Scurl\Request::initialize
+	 * @covers Sesser\Scurl\Scurl::__construct
 	 * @covers Sesser\Scurl\Scurl::getInstance
 	 */
 	public function testInstanceAndInit()
@@ -42,6 +43,7 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('\Sesser\Scurl\Scurl', $this->scurl);
 		$scurl = Scurl::getInstance();
 		$this->assertInstanceOf('\Sesser\Scurl\Scurl', $scurl);
+		$this->assertEquals(sha1(serialize($this->scurl)), sha1(serialize($scurl)));
 	}
 
 	/**
@@ -65,7 +67,57 @@ class ScurlTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($scurl->removeListener(Scurl::EVENT_BEFORE, $beforeHash));
 		$this->assertFalse($scurl->removeListener(Scurl::EVENT_BEFORE, 'nonexistanthash'));
 	}
-
+	
+	/**
+	 * @covers Sesser\Scurl\Scurl::getListeners
+	 * @covers Sesser\Scurl\Scurl::getListener
+	 * @covers Sesser\Scurl\Scurl::removeListeners
+	 */
+	public function testGetListeners()
+	{
+		$scurl = new Scurl;
+		$expected_key = sha1(serialize([$this, 'eventAfterHandler']));
+		$key = $scurl->addListener(Scurl::EVENT_AFTER, [$this, 'eventAfterHandler']);
+		$this->assertEquals($expected_key, $key);
+		$callback = $scurl->getListener(Scurl::EVENT_AFTER, $key);
+		$this->assertTrue(is_callable($callback));
+		$callbacks = $scurl->getListeners(Scurl::EVENT_AFTER);
+		$this->assertNotEmpty($callbacks);
+		$this->assertEquals(1, count($callbacks));
+		$this->assertNull($scurl->getListener(Scurl::EVENT_AFTER, 'boguskey'));
+		$all = $scurl->getListeners();
+		$this->assertTrue(array_key_exists(Scurl::EVENT_AFTER, $all));
+		$this->assertTrue(array_key_exists(Scurl::EVENT_BEFORE, $all));
+		$this->assertTrue(array_key_exists(Scurl::EVENT_ERROR, $all));
+		$scurl->addListener(Scurl::EVENT_BEFORE, [$this, 'eventCallbackTest']);
+		$scurl->removeListeners(Scurl::EVENT_BEFORE);
+		$this->assertEmpty($scurl->getListeners(Scurl::EVENT_BEFORE));
+		$scurl->removeListeners();
+		$this->assertEmpty($scurl->getListeners(Scurl::EVENT_AFTER));
+	}
+	
+	public function eventAfterHandler(Request $req, Response $res)
+	{
+		echo __METHOD__;
+	}
+	
+	/**
+	 * @covers Sesser\Scurl\Scurl::request
+	 */
+	public function testErrorHandler()
+	{
+		$url = 'http://error.instaphp.com/test/get';
+		$self =& $this;
+		$scurl = Scurl::getInstance();
+		$scurl->addListener(Scurl::EVENT_ERROR, function($no, $msg, Request $req) use($self, $url) {
+			$self->assertTrue(TRUE);
+			$self->assertNotEmpty($msg);
+			$self->assertNotEmpty($no);
+			$self->assertEquals($url, $req->url);
+		});
+		$scurl->get($url);
+	}
+	
 	public function eventCallbackTest(Request $request)
 	{
 		$this->assertTrue(TRUE);

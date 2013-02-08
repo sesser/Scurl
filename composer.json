@@ -12,7 +12,14 @@
 		}
 	],
 	"require": {
-		"php": ">=5.4.0"
+		"php": ">=5.4.0",
+		"lib-curl": "*",
+		"lib-openssl": "*"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "3.7.*",
+		"apigen/apigen": "2.*",
+		"sesser/slogger": "1.*"
 	},
 	"autoload": {
 		"psr-0": {

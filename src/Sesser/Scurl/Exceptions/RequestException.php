@@ -40,7 +40,7 @@ class RequestException extends \Exception
 {
 	/**
 	 * Constructs a new RequestException
-	 * @inheritdoc
+	 * {@inheritdoc}
 	 */
 	public function __construct($message = null, $code = 0, $previous = NULL)
 	{
